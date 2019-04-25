@@ -163,7 +163,7 @@
       </footer>  
 
       <!--- Modal -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="resultsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -188,13 +188,21 @@
   </div>
 
   <script>
+    function runFriendsQuery(){
+    $.ajax({ url: "api/friends", method: "GET"})
+    .then(function(friends){
+        return friends;
+    })
+}
+
   $("#submit").on("click", function(event){
     event.preventDefault();
 
+
     var newFriend = {
-      friendName: $("#participantName").val().trim(),
-      friendPhoto: $("#participantImage").val().trim(),
-      responses: [
+      name: $("#participantName").val().trim(),
+      photo: $("#participantImage").val().trim(),
+      scores: [
                  parseInt($("#answer1").val().trim()),
                  parseInt($("#answer2").val().trim()),
                  parseInt($("#answer3").val().trim()),
@@ -208,19 +216,27 @@
     };
 
     console.log(newFriend);
-
-  $.post("/api/friends", newFriend, function(data){
-    if(data){
-      console.log("We have the data.");
-    $("#matchName").text(data.name);
-    $("#matchImage").attr("src", data.photo);
-    $("#resultsModal").modal("toggle");
+    if(newFriend.name === "" || newFriend.photo === "")
+    {
+      alert("You need to include both a name and a photo");
     }
 
     else{
+  $.post("/api/friends", newFriend, function(data){
+    if(data){
+      console.log("We have the data.");
+      $("#matchName").text(data.name);
+      $("#matchImage").attr("src", data.photo);
+      $("#matchImage").attr("width", 300);
+      $("#resultsModal").modal("toggle");
+    }
+
+    
+    else{
       console.log("Sorry, we don't have the data.")
     }
-  });
+  })
+  };
 })
   </script>
 

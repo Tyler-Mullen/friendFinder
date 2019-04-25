@@ -13,22 +13,24 @@ module.exports = function(app){
         }
 
         var participant = req.body;
-        var participantName = participant.friendName;
-        var participantPhoto = participant.friendPhoto;
-        var participantScores = participant.responses;
-        var totalDifference = 0;
+        var participantName = participant.name;
+        var participantPhoto = participant.photo;
+        var participantScores = participant.scores;
 
+        console.log(friends);
         for(i = 0; i < friends.length; i++){
-            console.log("Comparing scores to " + friend[i].name);
+            console.log("Comparing scores to " + friends[i].name);
+            var totalDifference = 0;
 
             for(j = 0; j < participantScores.length; j++){
                 totalDifference += Math.abs(participantScores[j] - parseInt(friends[i].scores[j]));
+            }
 
-                if(totalDifference < bestMatch.friendDifference){
-                    bestMatch.name = friends[i].name;
-                    bestMatch.photo = friends[i].photo;
-                    bestMatch.friendDifference = totalDifference;
-                }
+            if(totalDifference < bestMatch.friendDifference){
+                console.log("Your new best match is " + friends[i].name + " with a total difference of " + totalDifference);
+                bestMatch.name = friends[i].name;
+                bestMatch.photo = friends[i].photo;
+                bestMatch.friendDifference = totalDifference;
             }
         }
 
